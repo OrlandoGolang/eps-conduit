@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -52,8 +51,8 @@ func main() {
 
 	//Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		go proxies[nextHost].ServeHTTP(w, r)
 		nextHost = pickHost(nextHost, totesHost)
+		proxies[nextHost].ServeHTTP(w, r)
 	})
 
 	//tell the user what info the load balancer is using
