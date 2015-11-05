@@ -33,7 +33,7 @@ func main() {
 	}
 
 	//Remove whitespace from backends
-	strings.Replace(*backend, " ", "", -1)
+	*backend = strings.Replace(*backend, " ", "", -1)
 	//Throwing backends into an array
 	backends := strings.Split(*backend, ",")
 	totesHost := len(backends)
