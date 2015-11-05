@@ -11,8 +11,8 @@ import (
 	"strings"
 )
 
-//Global variable of the last backend sent.  This is for round-robin load balancing
-var lastHost int = 0
+//Global variable of the next backend to be sent.  This is for round-robin load balancing
+var nextHost int = 0
 
 func main() {
 
@@ -39,11 +39,22 @@ func main() {
 	backends := strings.Split(*backend, ",")
 	totesHost := len(backends)
 
+	//Create a proxy for each backend
+	proxies := make([]*httputil.ReverseProxy, totesHost)
+	for i := range backends {
+		host := backends[i]
+		director := func(req *http.Request) {
+			req.URL.Scheme = "http"
+			req.URL.Host = host
+		}
+		proxies[i] = &httputil.ReverseProxy{Director: director}
+	}
+
 	//Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("lastHost is " + strconv.Itoa(lastHost))
-		proxy := httpBalancer(backends, totesHost)
-		proxy.ServeHTTP(w, r)
+		go proxies[nextHost].ServeHTTP(w, r)
+		nextHost = pickHost(nextHost, totesHost)
+		log.Println("nextHost is " + strconv.Itoa(nextHost))
 	})
 
 	//tell the user what info the load balancer is using
@@ -63,31 +74,11 @@ func main() {
 	}
 }
 
-//Function for determining the next backend host and handing that to the user as a reverse proxy
-func httpBalancer(backend []string, totesHost int) *httputil.ReverseProxy {
-	log.Println("picking a host")
-	nextHost := pickHost(totesHost)
-	lastHost = nextHost
-	log.Println("PickHost done, lastHost is " + strconv.Itoa(lastHost))
-	log.Println("serving " + backend[nextHost])
-	director := func(req *http.Request) {
-		req.URL.Scheme = "http"
-		req.URL.Host = backend[nextHost]
-	}
-	proxy := &httputil.ReverseProxy{Director: director}
-	return proxy
-}
-
 //Function for determining what the next backend host should be
-func pickHost(totesHost int) int {
-	totesHost = totesHost - 1
-	log.Println("totesHost is " + strconv.Itoa(totesHost))
-	log.Println("lastHost is " + strconv.Itoa(lastHost))
-	if lastHost == totesHost {
+func pickHost(lastHost, totesHost int) int {
+	x := lastHost + 1
+	if x >= totesHost {
 		return 0
-	} else {
-		lastHost++
-		log.Println("lasthost is " + strconv.Itoa(lastHost))
-		return lastHost
 	}
+	return x
 }
