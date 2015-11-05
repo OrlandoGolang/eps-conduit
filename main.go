@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -35,13 +34,13 @@ func main() {
 
 	//Remove whitespace from backends
 	strings.Replace(*backend, " ", "", -1)
+
 	//Throwing backends into an array
 	backends := strings.Split(*backend, ",")
 	totesHost := len(backends)
 
 	//Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("lastHost is " + strconv.Itoa(lastHost))
 		proxy := httpBalancer(backends, totesHost)
 		proxy.ServeHTTP(w, r)
 	})
@@ -68,8 +67,6 @@ func httpBalancer(backend []string, totesHost int) *httputil.ReverseProxy {
 	log.Println("picking a host")
 	nextHost := pickHost(totesHost)
 	lastHost = nextHost
-	log.Println("PickHost done, lastHost is " + strconv.Itoa(lastHost))
-	log.Println("serving " + backend[nextHost])
 	director := func(req *http.Request) {
 		req.URL.Scheme = "http"
 		req.URL.Host = backend[nextHost]
@@ -81,13 +78,10 @@ func httpBalancer(backend []string, totesHost int) *httputil.ReverseProxy {
 //Function for determining what the next backend host should be
 func pickHost(totesHost int) int {
 	totesHost = totesHost - 1
-	log.Println("totesHost is " + strconv.Itoa(totesHost))
-	log.Println("lastHost is " + strconv.Itoa(lastHost))
 	if lastHost == totesHost {
 		return 0
 	} else {
 		lastHost++
-		log.Println("lasthost is " + strconv.Itoa(lastHost))
 		return lastHost
 	}
 }
