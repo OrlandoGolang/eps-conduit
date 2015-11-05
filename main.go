@@ -16,12 +16,14 @@ var lastHost int = 0
 
 func main() {
 
+	var config = ReadConfig()
+
 	//Handling user flags
-	backend := flag.String("b", "", "target ips for backend servers")
-	bind := flag.String("bind", "8000", "port to bind to")
-	mode := flag.String("mode", "http", "Balancing Mode")
-	certFile := flag.String("cert", "", "cert")
-	keyFile := flag.String("key", "", "key")
+	backend := flag.String("b", config.Backends, "target ips for backend servers")
+	bind := flag.String("bind", config.Bind, "port to bind to")
+	mode := flag.String("mode", config.Mode, "Balancing Mode")
+	certFile := flag.String("cert", config.Certfile, "cert")
+	keyFile := flag.String("key", config.Keyfile, "key")
 	flag.Parse()
 
 	//Error out if backend is not set
