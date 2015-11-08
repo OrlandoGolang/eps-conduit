@@ -18,21 +18,17 @@ ruby_block "insert_line" do
     file.insert_line_if_no_match("^export GOPATH\=.vagrant", "export GOPATH=/vagrant")
     file.insert_line_if_no_match("^export GOROOT\=\/usr\/local\/go", "export GOROOT=/usr/local/go")
     file.insert_line_if_no_match("^export PATH\=.PATH..GOROOT\/bin", "export PATH=$PATH:$GOROOT/bin")
+    file.insert_line_if_no_match("^alias projectdir.+", "alias projectdir='cd $GOPATH/src/project'")
     file.write_file
   end
 end
 
-# source global profile
-bash 'load etc profile' do
-  code "source /etc/profile"
-end
-
 # Create paths for go files
-gopath = '/vagrant/go'
+gopath = '/vagrant'
 godirs = ['bin', 'src', 'pkg']
 srcdirs = ['github.com', 'project']
 
-# creates primary gopath directory (/vagrant/go)
+# creates primary gopath directory (/vagrant)
 directory gopath do
   owner 'vagrant'
   group 'vagrant'
