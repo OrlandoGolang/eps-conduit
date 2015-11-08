@@ -17,8 +17,4 @@ Vagrant.configure(2) do |config|
     chef.cookbooks_path = ['./cookbooks',]
     chef.add_recipe "conduit"
   end
-  config.vm.synced_folder '.', '/vagrant/src/eps-conduit'
-  config.vm.provision :shell, :inline => "sudo apt-get install -y git"
-  config.vm.provision :shell, :inline => "cd /vagrant/src/eps-conduit && go get ./... && go install"
-  config.vm.provision :shell, :inline => "cd /vagrant/src/eps-conduit && cp conduit.conf ../../bin/"
 end
