@@ -17,4 +17,5 @@ Vagrant.configure(2) do |config|
     chef.cookbooks_path = ['./cookbooks',]
     chef.add_recipe "conduit"
   end
+  config.vm.synced_folder '.', '/vagrant/src/project'
 end
