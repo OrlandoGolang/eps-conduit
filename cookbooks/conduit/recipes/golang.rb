@@ -23,18 +23,21 @@ ruby_block "insert_line" do
   end
 end
 
+# add Go env vars to bash profile
+ruby_block "insert_line" do
+  block do
+    file = Chef::Util::FileEdit.new("/etc/profile")
+    file.insert_line_if_no_match("^export GOPATH\=.vagrant", "export GOPATH=/vagrant")
+    file.insert_line_if_no_match("^export GOROOT\=\/usr\/local\/go", "export GOROOT=/usr/local/go")
+    file.insert_line_if_no_match("^export PATH\=.PATH..GOROOT\/bin", "export PATH=$PATH:$GOROOT/bin")
+    file.write_file
+  end
+end
+
 # Create paths for go files
 gopath = '/vagrant'
 godirs = ['bin', 'src', 'pkg']
-srcdirs = ['github.com', 'project']
-
-# creates primary gopath directory (/vagrant)
-directory gopath do
-  owner 'vagrant'
-  group 'vagrant'
-  mode '0755'
-  action :create
-end
+srcdirs = ['eps-conduit',]
 
 # create main golang directories (bin, pkg, src)
 godirs.each do |path|
