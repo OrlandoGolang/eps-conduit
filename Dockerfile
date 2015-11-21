@@ -12,7 +12,7 @@ RUN echo "export GOPATH=\$HOME/.go" >> /var/lib/eps-conduit.bashrc && echo "expo
 ENV GOPATH=/var/lib/eps-conduit/.go
 RUN mkdir /var/lib/eps-conduit/eps-conduit
 ADD main.go /var/lib/eps-conduit/eps-conduit/main.go
-ADD config.go /var/lib/eps-conduig/eps-conduit/config.go
+ADD config.go /var/lib/eps-conduit/eps-conduit/config.go
 ADD conduit.conf /var/lib/eps-conduit/eps-conduit/conduit.conf
 RUN chown -R eps-conduit: /var/lib/eps-conduit
 
