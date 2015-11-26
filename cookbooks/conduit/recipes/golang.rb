@@ -18,6 +18,7 @@ ruby_block "insert_line" do
     file.insert_line_if_no_match("^export GOPATH\=.vagrant", "export GOPATH=/vagrant")
     file.insert_line_if_no_match("^export GOROOT\=\/usr\/local\/go", "export GOROOT=/usr/local/go")
     file.insert_line_if_no_match("^export PATH\=.PATH..GOROOT\/bin", "export PATH=$PATH:$GOROOT/bin")
+    file.insert_line_if_no_match("^export PATH\=.PATH..vagrant\/bin", "export PATH=$PATH:/vagrant/bin")
     file.insert_line_if_no_match("^alias projectdir.+", "alias projectdir='cd $GOPATH/src/eps-conduit'")
     file.write_file
   end
