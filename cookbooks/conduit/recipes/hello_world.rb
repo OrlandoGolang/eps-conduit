@@ -1,4 +1,5 @@
 # Clones hello world application and builds from source
+include_recipe "conduit::supervisor"
 
 ogo_path = '/vagrant/src/github.com/OrlandoGolang'
 hello_path = File.join(ogo_path, 'eps-conduit-hello')
@@ -42,4 +43,11 @@ end
 execute 'Build eps-conduit-hello' do
   cwd hello_path
   command 'go get ./... && go install'
+end
+
+execute 'Reload Supervisor Process' do
+  command <<-EOF
+  supervisorctl restart hello-8001 && \
+  supervisorctl restart hello-8002
+  EOF
 end
