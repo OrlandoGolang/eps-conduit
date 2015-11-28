@@ -12,6 +12,9 @@ Vagrant.configure(2) do |config|
   # update packages
   config.vm.provision :shell, :inline => "sudo apt-get update --fix-missing"
 
+  # kill supervisor in case its running
+  config.vm.provision :shell, :inline => "sudo pkill supervisord"
+
   # run chef scripts to additionally provision the virtual machine
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ['./cookbooks',]
