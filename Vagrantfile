@@ -7,13 +7,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8085
   # disabled default sync location
   config.vm.synced_folder './', '/vagrant', disabled: true
-  # sync according to standard golang environment & directory structure
-
   # update packages
   config.vm.provision :shell, :inline => "sudo apt-get update --fix-missing"
-
-  # kill supervisor in case its running
-  config.vm.provision :shell, :inline => "sudo pkill supervisord"
 
   # run chef scripts to additionally provision the virtual machine
   config.vm.provision :chef_solo do |chef|
@@ -21,7 +16,4 @@ Vagrant.configure(2) do |config|
     chef.add_recipe "conduit"
   end
   config.vm.synced_folder '.', '/vagrant/src/eps-conduit'
-  config.vm.provision :shell, :inline => "sudo apt-get install -y git"
-  config.vm.provision :shell, :inline => "cd /vagrant/src/eps-conduit && go get ./... && go install"
-  config.vm.provision :shell, :inline => "cd /vagrant/src/eps-conduit && cp conduit.conf ../../bin/"
 end

@@ -15,6 +15,14 @@ cookbook_file '/etc/supervisord.conf' do
   action :create
 end
 
+cookbook_file '/etc/init/supervisord.conf' do
+  source 'init_supervisor.sh'
+  owner 'vagrant'
+  group 'vagrant'
+  mode '0755'
+  action :create
+end
+
 directory '/var/log/supervisord' do
   owner 'root'
   group 'root'
@@ -23,6 +31,6 @@ directory '/var/log/supervisord' do
 end
 
 service "supervisord" do
-  start_command "supervisord -c /etc/supervisord.conf"
-  action :start
+  start_command "supervisord -c /etc/supervisord.conf ; true"
+  action [:enable, :start]
 end

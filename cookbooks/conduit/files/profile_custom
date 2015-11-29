@@ -1,0 +1,15 @@
+export GOPATH=/vagrant
+
+export GOROOT=/usr/local/go
+
+export PATH=$PATH:$GOROOT/bin
+
+export GOBIN=$GOPATH/bin
+
+export PROJECT_PATH=$GOPATH/src/eps-conduit
+
+alias projectdir='cd $PROJECT_PATH'
+
+export PATH=$PATH:/vagrant/bin
+
+alias conduitd="compiledaemon -directory='$GOPATH/src/eps-conduit' -build='go install' -command='$GOBIN/eps-conduit'"

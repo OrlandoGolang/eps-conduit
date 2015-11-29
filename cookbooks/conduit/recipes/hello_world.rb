@@ -40,13 +40,17 @@ git "Clone eps-conduit-hello" do
   destination hello_path
 end
 
-execute 'Build eps-conduit-hello' do
+bash 'Build eps-conduit-hello' do
   cwd hello_path
-  command 'go get ./... && go install'
+  code <<-EOF
+  go get ./... && \
+  go install
+  EOF
+  environment 'GOPATH' => '/vagrant/'
 end
 
-execute 'Reload Supervisor Process' do
-  command <<-EOF
+bash 'Reload Supervisor Process' do
+  code <<-EOF
   supervisorctl restart hello-8001 && \
   supervisorctl restart hello-8002
   EOF
