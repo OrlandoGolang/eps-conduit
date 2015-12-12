@@ -4,7 +4,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/trusty64"
   # port forwarding
-  config.vm.network "forwarded_port", guest: 80, host: 8085
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
   # disabled default sync location
   config.vm.synced_folder './', '/vagrant', disabled: true
   # update packages
