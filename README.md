@@ -19,8 +19,6 @@ The easiest way to have a local development installation of eps-conduit is to us
 
 `$ vagrant up`
 
-`$ vagrant provision`
-
 These vagrant commands should create everything you need to develop and test eps-conduit. In particular, a lightweight "hello world" web application is running in the backgorund on ports 8001 and 8002. It is managed with [supervisor](http://supervisord.org/).
 
 #### 3. SSH in to Vagrant Machine and Run eps-conduit
