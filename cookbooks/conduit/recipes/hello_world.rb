@@ -18,7 +18,7 @@ package 'Install Git' do
   package_name 'git'
 end
 
-
+# create ogo path
 directory ogo_path do
   owner 'vagrant'
   group 'vagrant'
