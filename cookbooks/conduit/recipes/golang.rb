@@ -1,3 +1,10 @@
+#
+# Author:: Scott Crespo <scott@orlandods.com>
+# Cookbook Name:: conduit
+# Recipe:: golang
+#
+# Installs Golang 1.5.1 and configures necessary environment variables
+
 # download golang 1.5.1 binaries
 remote_file '/home/vagrant/go1.5.1.linux-amd64.tar.gz' do
   source 'https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz'

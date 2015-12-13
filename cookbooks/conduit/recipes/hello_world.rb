@@ -1,3 +1,11 @@
+#
+# Author:: Scott Crespo <scott@orlandods.com>
+# Cookbook Name:: conduit
+# Recipe:: hello_world
+#
+# Installs eps-conduit-hello - a lightweight web app thats's useful for testing
+# and debugging eps-conduit
+
 # Clones hello world application and builds from source
 include_recipe "conduit::supervisor"
 

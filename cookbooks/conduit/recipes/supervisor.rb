@@ -1,3 +1,10 @@
+#
+# Author:: Scott Crespo <scott@orlandods.com>
+# Cookbook Name:: conduit
+# Recipe:: supervisor
+#
+# Installs supervisor - a process management tool
+# This installation runs eps-conduit-hello on multiple processes and ports
 
 package 'Python Setuptools' do
   package_name 'python-setuptools'
