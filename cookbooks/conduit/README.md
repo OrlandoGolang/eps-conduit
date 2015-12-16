@@ -15,16 +15,6 @@ Downloads and installs [eps-conduit-hello](https://github.com/OrlandoGolang/eps-
 
 This information is helpful for debugging eps-conduit to confirm if it's distributing load properly across multiple backends.
 
-## Compile Daemon
-
-Downloads and installs [CompileDaemon](https://github.com/githubnemo/CompileDaemon). Compile Daemon watches your .go files in a directory and invokes go build if a file changed.
-
-A bash alias is available in the Vagrant machine to run compile daemon and watch project files.
-
-Simply run: `$ conduitd`
-
-Every time a project file is changed, CompileDaemon will re-build eps-conduit and restart the eps-conduit process.
-
 ## Build
 
 Downloads dependencies via `$ go get` and compiles eps-conduit via `$ go install` each time vagrant machine is provisioned.
