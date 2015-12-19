@@ -1,29 +1,39 @@
 package main
 
+
 import (
 	"github.com/BurntSushi/toml"
 	"log"
 	"os"
 )
 
-var configfile string = "conduit.conf"
-
 type Config struct {
-	Backends string
-	Bind     string
-	Mode     string
-	Certfile string
-	Keyfile  string
+	Backends []string `toml:"backends"`
+	Bind     string `toml:"bind"`
+	Mode     string `toml:"mode"`
+	Certfile string `toml:certFile`
+	Keyfile  string `toml:keyFile`
 }
 
-func ReadConfig() Config {
-	_, err := os.Stat(configfile)
-	if err != nil {
-		log.Fatal("Config file not found: ", configfile)
-	}
-	var config Config
-	if _, err := toml.DecodeFile(configfile, &config); err != nil {
-		log.Fatal(err)
+var config *Config = nil
+
+func GetConfig(configFile string) *Config {
+	if config == nil {
+		config.init(configFile)
 	}
 	return config
+}
+
+func (c *Config) init(configFile string) {
+	_, err := os.Stat(configFile)
+
+	log.Println("Line 30")
+	if err != nil {
+		log.Fatal("Config file not found: ", configFile)
+	}
+	log.Println("Line 34")
+	if _, err := toml.DecodeFile(configFile, c); err != nil {
+		log.Fatal(err)
+	log.Println("Line 37")
+	}
 }

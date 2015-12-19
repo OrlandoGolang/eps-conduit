@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
-	"strings"
+	//"strings"
 )
 
 //Global variable of the next backend to be sent.  This is for round-robin load balancing
@@ -15,33 +15,49 @@ var nextHost int = 0
 
 func main() {
 
-	var config = ReadConfig()
-
 	//Handling user flags
-	backend := flag.String("b", config.Backends, "target ips for backend servers")
-	bind := flag.String("bind", config.Bind, "port to bind to")
-	mode := flag.String("mode", config.Mode, "Balancing Mode")
-	certFile := flag.String("cert", config.Certfile, "cert")
-	keyFile := flag.String("key", config.Keyfile, "key")
+	configFile := flag.String("config","/Users/screspo/Dev/go/bin/conduit.conf", "Path to config file. Default is /etc/conduit.conf")
+	//backendStr := flag.String("b", "", "target ips for backend servers")
+	bind := flag.String("bind", "", "port to bind to")
+	mode := flag.String("mode", "", "Balancing Mode")
+	certFile := flag.String("cert", "", "cert")
+	keyFile := flag.String("key", "", "key")
+
 	flag.Parse()
 
-	//Error out if backend is not set
-	if *backend == "" {
-		fmt.Fprintf(os.Stderr, "no backends chosen, use the -b flag.  ex:\n")
-		fmt.Fprintf(os.Stderr, "eps-conduit -b 10.1.8.1,10.1.8.2")
-		os.Exit(1)
+	log.Println(*configFile)
+
+	config := GetConfig(*configFile)
+
+	//if *backendStr != "" {
+		//Remove whitespace from backends
+	//	*backendStr = strings.Replace(*backendStr, " ", "", -1)
+		//Throwing backends into an array
+	//	config.Backends = strings.Split(*backendStr, ",")
+	//}
+
+	totesHost := len(config.Backends)
+
+	if *bind != "" {
+		config.Bind = *bind
 	}
 
-	//Remove whitespace from backends
-	*backend = strings.Replace(*backend, " ", "", -1)
-	//Throwing backends into an array
-	backends := strings.Split(*backend, ",")
-	totesHost := len(backends)
+	if *mode != "" {
+		config.Mode = *mode
+	}
+
+	if *certFile != "" {
+		config.Certfile = *certFile
+	}
+
+	if *keyFile != "" {
+		config.Keyfile = *keyFile
+	}
 
 	//Create a proxy for each backend
 	proxies := make([]*httputil.ReverseProxy, totesHost)
-	for i := range backends {
-		host := backends[i]
+	for i := range config.Backends {
+		host := config.Backends[i]
 		director := func(req *http.Request) {
 			req.URL.Scheme = "http"
 			req.URL.Host = host
@@ -56,7 +72,7 @@ func main() {
 	})
 
 	//tell the user what info the load balancer is using
-	for _, v := range backends {
+	for _, v := range config.Backends {
 		log.Println("using " + v + " as a backend")
 	}
 	log.Println("listening on port " + *bind)
@@ -65,7 +81,7 @@ func main() {
 	if *mode == "http" {
 		http.ListenAndServe(":"+*bind, nil)
 	} else if *mode == "https" {
-		http.ListenAndServeTLS(":"+*bind, *certFile, *keyFile, nil)
+		http.ListenAndServeTLS(":"+config.Bind, config.Certfile, config.Keyfile, nil)
 	} else {
 		fmt.Fprintf(os.Stderr, "unknown mode or mode not set")
 		os.Exit(1)
