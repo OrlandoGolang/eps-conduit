@@ -19,6 +19,7 @@ var config *Config = nil
 
 func GetConfig(configFile string) *Config {
 	if config == nil {
+		config = new(Config)
 		config.init(configFile)
 	}
 	return config

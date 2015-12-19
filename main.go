@@ -16,7 +16,7 @@ var nextHost int = 0
 func main() {
 
 	//Handling user flags
-	configFile := flag.String("config","/Users/screspo/Dev/go/bin/conduit.conf", "Path to config file. Default is /etc/conduit.conf")
+	configFile := flag.String("config","/etc/conduit.conf", "Path to config file. Default is /etc/conduit.conf")
 	//backendStr := flag.String("b", "", "target ips for backend servers")
 	bind := flag.String("bind", "", "port to bind to")
 	mode := flag.String("mode", "", "Balancing Mode")
