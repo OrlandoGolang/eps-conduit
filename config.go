@@ -9,11 +9,23 @@ import (
 	"strings"
 )
 
+// Config Struct represents the load balancer's configuration
 type Config struct {
+
+	// the backend services to balance
 	Backends []string `toml:"backends"`
+
+	// The port the load balancer is bound to
 	Bind     string   `toml:"bind"`
+
+	// The load balancing mode (i.e. round-robin)
+	// Currently, only round-robin is used, and configurable mode is not supported.
 	Mode     string   `toml:"mode"`
+
+	// Path to certificate file
 	Certfile string   `toml:certFile`
+
+	// Path to private key file related to certificate
 	Keyfile  string   `toml:keyFile`
 }
 
