@@ -17,8 +17,10 @@ type Config struct {
 	Keyfile  string   `toml:keyFile`
 }
 
+// singleton Config instance initially set to nil
 var config *Config = nil
 
+// GetConfig implements a singleton pattern for access the Config instance.
 func GetConfig(configFile string) *Config {
 	if config == nil {
 		config = new(Config)
@@ -27,6 +29,8 @@ func GetConfig(configFile string) *Config {
 	return config
 }
 
+// init initializes a new Config instance by reading from the config file
+// It will unmarshal the toml file into the Config struct
 func (c *Config) init(configFile string) {
 	_, err := os.Stat(configFile)
 
@@ -38,12 +42,14 @@ func (c *Config) init(configFile string) {
 	}
 }
 
+// handleUserInput checks command line input and overrides config file settings
+// Backends is parsed from a raw string to a slice of strings
 func (c *Config) handleUserInput() {
 
 	if *backendStr != "" {
-		//Remove whitespace from backends
+		// Remove whitespace from backends
 		*backendStr = strings.Replace(*backendStr, " ", "", -1)
-		//Throwing backends into an array
+		// Throwing backends into an array
 		c.Backends = strings.Split(*backendStr, ",")
 	}
 	if *bind != "" {
@@ -60,6 +66,7 @@ func (c *Config) handleUserInput() {
 	}
 }
 
+// printConfigInfo prints to stderr host and port settings applied to current process
 func (c *Config) printConfigInfo() {
 	// tell the user what info the load balancer is using
 	for _, v := range c.Backends {
@@ -68,6 +75,8 @@ func (c *Config) printConfigInfo() {
 	log.Println("listening on port " + c.Bind)
 }
 
+// makeProxies creates slice of ReverseProxies based on the Config's backend hosts
+// It returns a slice of httputil.ReverseProxy
 func (c *Config) makeProxies() []*httputil.ReverseProxy {
 	// Create a proxy for each backend
 	proxies := make([]*httputil.ReverseProxy, len(c.Backends))

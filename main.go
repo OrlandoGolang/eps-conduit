@@ -46,7 +46,7 @@ func main() {
 	}
 }
 
-// Function for determining what the next backend host should be
+// pickHost determines what the next backend host should be according to round-robin
 func pickHost(lastHost, hostCount int) int {
 	x := lastHost + 1
 	if x >= hostCount {
