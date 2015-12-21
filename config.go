@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/BurntSushi/toml"
 	"log"
-	"os"
-	"strings"
 	"net/http"
 	"net/http/httputil"
+	"os"
+	"strings"
 )
 
 type Config struct {
