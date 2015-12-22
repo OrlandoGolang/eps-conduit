@@ -16,17 +16,17 @@ type Config struct {
 	Backends []string `toml:"backends"`
 
 	// The port the load balancer is bound to
-	Bind     string   `toml:"bind"`
+	Bind string `toml:"bind"`
 
 	// The load balancing mode (i.e. round-robin)
 	// Currently, only round-robin is used, and configurable mode is not supported.
-	Mode     string   `toml:"mode"`
+	Mode string `toml:"mode"`
 
 	// Path to certificate file
-	Certfile string   `toml:certFile`
+	Certfile string `toml:certFile`
 
 	// Path to private key file related to certificate
-	Keyfile  string   `toml:keyFile`
+	Keyfile string `toml:keyFile`
 }
 
 // singleton Config instance initially set to nil
