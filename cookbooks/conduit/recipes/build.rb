@@ -22,5 +22,5 @@ end
 bash 'Symlink conduit.conf to /etc/' do
   cwd '/etc'
   code "ln -s #{config_path}"
-  not_if { File.exists?(config_path) }
+  not_if { File.exists?("/etc/conduit.conf") }
 end
