@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
 	"log"
-	"strings"
 	"net/http"
 	"net/http/httputil"
+	"os"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 )
