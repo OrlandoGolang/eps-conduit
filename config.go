@@ -94,9 +94,12 @@ func (c *Config) makeProxies() []*httputil.ReverseProxy {
 	// Create a proxy for each backend
 	proxies := make([]*httputil.ReverseProxy, len(c.Backends))
 	for i := range c.Backends {
+		// host must be defined here, and not within the anonymous function.
+		// Otherwise, you'll run into scoping issues
+		host := c.Backends[i]
 		director := func(req *http.Request) {
 			req.URL.Scheme = "http"
-			req.URL.Host = c.Backends[i]
+			req.URL.Host = host
 		}
 		proxies[i] = &httputil.ReverseProxy{Director: director}
 	}
