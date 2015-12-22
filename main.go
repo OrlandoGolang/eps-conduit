@@ -1,3 +1,12 @@
+/*
+main.go
+
+Description:
+	Eps-Conduit is a light-weight load balancer.
+
+Source Code:
+	https://github.com/orlandogolang/eps-conduit
+*/
 package main
 
 import (
