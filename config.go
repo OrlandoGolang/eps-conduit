@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/BurntSushi/toml"
+	"os"
 	"log"
+	"strings"
 	"net/http"
 	"net/http/httputil"
-	"os"
-	"strings"
+
+	"github.com/BurntSushi/toml"
 )
 
 // Config Struct represents the load balancer's configuration
