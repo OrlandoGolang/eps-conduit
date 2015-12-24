@@ -49,3 +49,10 @@ service "supervisord" do
   start_command "supervisord -c /etc/supervisord.conf ; true"
   action [:enable, :start]
 end
+
+bash "restart processes" do
+  code <<-EOF
+  supervisorctl reread ; true
+  supervisorctl restart all ; true
+  EOF
+end

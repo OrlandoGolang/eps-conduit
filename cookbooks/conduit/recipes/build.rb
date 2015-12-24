@@ -6,6 +6,7 @@
 # Installs dependencies and eps-conduit
 
 project_path = '/vagrant/src/eps-conduit'
+config_path = File.join(project_path, 'conduit.conf')
 
 # downloads, installs, and builds dependencies and eps-conduit
 bash 'Get and Install' do
@@ -16,4 +17,10 @@ bash 'Get and Install' do
   cp conduit.conf /vagrant/bin
   EOF
   environment 'GOPATH' => '/vagrant/'
+end
+
+bash 'Symlink conduit.conf to /etc/' do
+  cwd '/etc'
+  code "ln -s #{config_path}"
+  not_if { File.exists?("/etc/conduit.conf") }
 end
