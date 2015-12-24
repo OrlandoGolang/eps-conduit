@@ -28,6 +28,8 @@ type Config struct {
 
 	// Path to private key file related to certificate
 	Keyfile string `toml:keyFile`
+
+	Proxies []*httputil.ReverseProxy
 }
 
 // singleton Config instance initially set to nil
@@ -53,6 +55,7 @@ func (c *Config) init(configFile string) {
 	if _, err := toml.DecodeFile(configFile, c); err != nil {
 		log.Fatal(err)
 	}
+	c.makeProxies()
 }
 
 // handleUserInput checks command line input and overrides config file settings
@@ -90,9 +93,9 @@ func (c *Config) printConfigInfo() {
 
 // makeProxies creates slice of ReverseProxies based on the Config's backend hosts
 // It returns a slice of httputil.ReverseProxy
-func (c *Config) makeProxies() []*httputil.ReverseProxy {
+func (c *Config) makeProxies() {
 	// Create a proxy for each backend
-	proxies := make([]*httputil.ReverseProxy, len(c.Backends))
+	c.Proxies = make([]*httputil.ReverseProxy, len(c.Backends))
 	for i := range c.Backends {
 		// host must be defined here, and not within the anonymous function.
 		// Otherwise, you'll run into scoping issues
@@ -101,7 +104,6 @@ func (c *Config) makeProxies() []*httputil.ReverseProxy {
 			req.URL.Scheme = "http"
 			req.URL.Host = host
 		}
-		proxies[i] = &httputil.ReverseProxy{Director: director}
+		c.Proxies[i] = &httputil.ReverseProxy{Director: director}
 	}
-	return proxies
 }

@@ -35,13 +35,12 @@ func main() {
 	config := GetConfig(*configFile)
 	config.handleUserInput()
 	config.printConfigInfo()
-	proxies := config.makeProxies()
 	hostCount := len(config.Backends)
 
 	// Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		nextHost = pickHost(nextHost, hostCount)
-		proxies[nextHost].ServeHTTP(w, r)
+		config.Proxies[nextHost].ServeHTTP(w, r)
 	})
 
 	// Start the http(s) listener depending on user's selected mode
