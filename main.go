@@ -39,7 +39,7 @@ func main() {
 
 	// Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		nextHost = pickHost(nextHost, hostCount)
+		nextHost = config.pickHost(nextHost, hostCount)
 		config.Proxies[nextHost].ServeHTTP(w, r)
 	})
 
@@ -52,14 +52,4 @@ func main() {
 		fmt.Fprintf(os.Stderr, "unknown mode or mode not set")
 		os.Exit(1)
 	}
-}
-
-// pickHost determines the next backend host to forward the request to - according to round-robin
-// It returns an integer, which represents the host's index in config.Backends
-func pickHost(lastHost, hostCount int) int {
-	x := lastHost + 1
-	if x >= hostCount {
-		return 0
-	}
-	return x
 }

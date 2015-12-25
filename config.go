@@ -107,3 +107,13 @@ func (c *Config) makeProxies() {
 		c.Proxies[i] = &httputil.ReverseProxy{Director: director}
 	}
 }
+
+// pickHost determines the next backend host to forward the request to - according to round-robin
+// It returns an integer, which represents the host's index in config.Backends
+func (c *Config) pickHost(lastHost, hostCount int) int {
+	x := lastHost + 1
+	if x >= hostCount {
+		return 0
+	}
+	return x
+}
