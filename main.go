@@ -33,8 +33,6 @@ func main() {
 
 	flag.Parse()
 	config := GetConfig(*configFile)
-	config.handleUserInput()
-	config.printConfigInfo()
 	hostCount := len(config.Backends)
 
 	// Function for handling the http requests

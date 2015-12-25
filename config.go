@@ -55,6 +55,8 @@ func (c *Config) init(configFile string) {
 	if _, err := toml.DecodeFile(configFile, c); err != nil {
 		log.Fatal(err)
 	}
+	c.handleUserInput()
+	c.printConfigInfo()
 	c.makeProxies()
 }
 
