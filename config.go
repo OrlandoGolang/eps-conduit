@@ -35,7 +35,7 @@ type Config struct {
 // singleton Config instance initially set to nil
 var config *Config = nil
 
-// GetConfig implements a singleton pattern for access the Config instance.
+// GetConfig implements a singleton pattern to access the Config singleton
 func GetConfig(configFile string) *Config {
 	if config == nil {
 		config = new(Config)

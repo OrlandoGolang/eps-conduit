@@ -33,11 +33,10 @@ func main() {
 
 	flag.Parse()
 	config := GetConfig(*configFile)
-	hostCount := len(config.Backends)
 
 	// Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		nextHost = config.pickHost(nextHost, hostCount)
+		nextHost = config.pickHost(nextHost, config.HostCount)
 		config.Proxies[nextHost].ServeHTTP(w, r)
 	})
 
