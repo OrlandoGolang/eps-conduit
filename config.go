@@ -30,6 +30,10 @@ type Config struct {
 	Keyfile string `toml:keyFile`
 
 	Proxies []*httputil.ReverseProxy
+
+	HostCount int
+
+	NextHost int
 }
 
 // singleton Config instance initially set to nil
@@ -58,6 +62,8 @@ func (c *Config) init(configFile string) {
 	c.handleUserInput()
 	c.printConfigInfo()
 	c.makeProxies()
+	c.HostCount = len(c.Backends)
+	c.NextHost = 0
 }
 
 // handleUserInput checks command line input and overrides config file settings
@@ -112,10 +118,11 @@ func (c *Config) makeProxies() {
 
 // pickHost determines the next backend host to forward the request to - according to round-robin
 // It returns an integer, which represents the host's index in config.Backends
-func (c *Config) pickHost(lastHost, hostCount int) int {
-	x := lastHost + 1
-	if x >= hostCount {
-		return 0
+func (c *Config) pickHost() {
+	nextHost = c.NextHost + 1
+	if nextHost  >= c.HostCount {
+		c.NextHost = 0
+	} else {
+		c.NextHost = nextHost
 	}
-	return x
 }

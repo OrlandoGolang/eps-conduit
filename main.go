@@ -36,8 +36,8 @@ func main() {
 
 	// Function for handling the http requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		nextHost = config.pickHost(nextHost, config.HostCount)
-		config.Proxies[nextHost].ServeHTTP(w, r)
+		config.pickHost()
+		config.Proxies[config.NextHost].ServeHTTP(w, r)
 	})
 
 	// Start the http(s) listener depending on user's selected mode
