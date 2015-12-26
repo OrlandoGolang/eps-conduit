@@ -31,12 +31,7 @@ func main() {
 	flag.Parse()
 	config := GetConfig(*configFile)
 
-	// Function for handling the http requests
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		config.pickHost()
-		config.Proxies[config.NextHost].ServeHTTP(w, r)
-	})
-
+	http.HandleFunc("/", handle)
 	// Start the http(s) listener depending on user's selected mode
 	if config.Mode == "http" {
 		http.ListenAndServe(":"+config.Bind, nil)
@@ -46,4 +41,10 @@ func main() {
 		fmt.Fprintf(os.Stderr, "unknown mode or mode not set")
 		os.Exit(1)
 	}
+}
+
+// Function for handling the http requests
+func handle (w http.ResponseWriter, r *http.Request) {
+	config.pickHost()
+	config.Proxies[config.NextHost].ServeHTTP(w, r)
 }
