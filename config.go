@@ -119,7 +119,7 @@ func (c *Config) makeProxies() {
 // pickHost determines the next backend host to forward the request to - according to round-robin
 // It returns an integer, which represents the host's index in config.Backends
 func (c *Config) pickHost() {
-	nextHost = c.NextHost + 1
+	nextHost := c.NextHost + 1
 	if nextHost  >= c.HostCount {
 		c.NextHost = 0
 	} else {

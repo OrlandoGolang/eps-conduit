@@ -16,9 +16,6 @@ import (
 	"os"
 )
 
-// Global variable of the next backend to be sent.  This is for round-robin load balancing
-var nextHost int = 0
-
 // Handling user flags
 // User flags must be package globals they can be easily worked on by Config member functions
 // and avoid passing each command line option as a parameter.
