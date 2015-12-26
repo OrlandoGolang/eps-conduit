@@ -28,10 +28,13 @@ type Config struct {
 	// Path to private key file related to certificate
 	Keyfile string `toml:keyFile`
 
+	// Revserse Proxies to forward requests to
 	Proxies []*httputil.ReverseProxy
 
+	// Number of proxies available
 	HostCount int
 
+	// The index of the next proxy to forward a request to
 	NextHost int
 }
 
@@ -67,6 +70,7 @@ func (c *Config) init(configFile string) {
 
 // handleUserInput checks command line input and overrides config file settings
 // Backends is parsed from a raw string to a slice of strings
+// TODO: Better input validation
 func (c *Config) handleUserInput() {
 
 	if *backendStr != "" {
@@ -116,7 +120,7 @@ func (c *Config) makeProxies() {
 }
 
 // Function for handling the http requests
-func (c *Config) handle (w http.ResponseWriter, r *http.Request) {
+func (c *Config) handle(w http.ResponseWriter, r *http.Request) {
 	c.pickHost()
 	c.Proxies[c.NextHost].ServeHTTP(w, r)
 }
@@ -125,7 +129,7 @@ func (c *Config) handle (w http.ResponseWriter, r *http.Request) {
 // It returns an integer, which represents the host's index in config.Backends
 func (c *Config) pickHost() {
 	nextHost := c.NextHost + 1
-	if nextHost  >= c.HostCount {
+	if nextHost >= c.HostCount {
 		c.NextHost = 0
 	} else {
 		c.NextHost = nextHost

@@ -30,7 +30,6 @@ func main() {
 
 	flag.Parse()
 	config := GetConfig(*configFile)
-
 	// send requests to proxies via config.handle
 	http.HandleFunc("/", config.handle)
 
