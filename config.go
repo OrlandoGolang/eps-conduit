@@ -19,8 +19,7 @@ type Config struct {
 	// The port the load balancer is bound to
 	Bind string `toml:"bind"`
 
-	// The load balancing mode (i.e. round-robin)
-	// Currently, only round-robin is used, and configurable mode is not supported.
+	// Secure or unsecure http protocol
 	Mode string `toml:"mode"`
 
 	// Path to certificate file
@@ -114,6 +113,12 @@ func (c *Config) makeProxies() {
 		}
 		c.Proxies[i] = &httputil.ReverseProxy{Director: director}
 	}
+}
+
+// Function for handling the http requests
+func (c *Config) handle (w http.ResponseWriter, r *http.Request) {
+	c.pickHost()
+	c.Proxies[c.NextHost].ServeHTTP(w, r)
 }
 
 // pickHost determines the next backend host to forward the request to - according to round-robin
