@@ -16,9 +16,6 @@ import (
 	"os"
 )
 
-// Global variable of the next backend to be sent.  This is for round-robin load balancing
-var nextHost int = 0
-
 // Handling user flags
 // User flags must be package globals they can be easily worked on by Config member functions
 // and avoid passing each command line option as a parameter.
@@ -33,16 +30,8 @@ func main() {
 
 	flag.Parse()
 	config := GetConfig(*configFile)
-	config.handleUserInput()
-	config.printConfigInfo()
-	proxies := config.makeProxies()
-	hostCount := len(config.Backends)
-
-	// Function for handling the http requests
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		nextHost = pickHost(nextHost, hostCount)
-		proxies[nextHost].ServeHTTP(w, r)
-	})
+	// send requests to proxies via config.handle
+	http.HandleFunc("/", config.handle)
 
 	// Start the http(s) listener depending on user's selected mode
 	if config.Mode == "http" {
@@ -53,14 +42,4 @@ func main() {
 		fmt.Fprintf(os.Stderr, "unknown mode or mode not set")
 		os.Exit(1)
 	}
-}
-
-// pickHost determines the next backend host to forward the request to - according to round-robin
-// It returns an integer, which represents the host's index in config.Backends
-func pickHost(lastHost, hostCount int) int {
-	x := lastHost + 1
-	if x >= hostCount {
-		return 0
-	}
-	return x
 }
