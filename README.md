@@ -27,7 +27,12 @@ These vagrant commands should create everything you need to develop and test eps
 
 `$ cd /vagrant/bin`
 
-`$ ./eps-conduit`
+`$ sudo ./eps-conduit`
+
+**Note**
+
+	You must run eps-conduit as sudo to use the default logpath. Otherwise, specify a logpath
+	accessible by a non-root user.
 
 After running these commands, eps-conduit should be running in your terminal session.
 
