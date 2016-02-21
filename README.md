@@ -27,7 +27,12 @@ These vagrant commands should create everything you need to develop and test eps
 
 `$ cd /vagrant/bin`
 
-`$ ./eps-conduit`
+`$ sudo ./eps-conduit`
+
+**Note**
+
+	You must run eps-conduit as sudo to use the default logpath. Otherwise, specify a logpath
+	accessible by a non-root user.
 
 After running these commands, eps-conduit should be running in your terminal session.
 
@@ -46,17 +51,17 @@ Subsequent `curl` commands should yield responses from alternating ports (8001 &
 
 ***
 
-##Usage
+## Usage
+
 By default, eps-conduit will bind to port 8000, but any port can be specified.
 
-###Flags
-* -b    list of backend hosts
-  * ex:  eps-conduit -b "10.2.8.1, 10.2.8.2"
-* -bind specify what port to bind to (defaults to 8000)
-  * ex:  eps-conduit -bind 80
-* -mode specifies what mode to use (http or https)
-  * ex:  eps-conduit -mode https
-* -cert specify an SSL cert file (for https mode)
-  * ex:  eps-conduit -cert mycert.crt
-* -key  specify an SSL keyfile (for https mode)
-  * ex:  eps-conduit -key mykeyfile.key
+### Flags
+
+| Flag  | Description                                       | Example Usage                             |
+| ----- | ------------------------------------------------- | ----------------------------------------- |
+| -b    | specify a list of backend hosts                   | eps-conduit -b "10.2.8.1, 10.2.8.2"       |
+| -bind | specify what port to bind to (defaults to 8000)   | eps-conduit -bind 80                      |
+| -mode | specifies what mode to use (http or https)        | eps-conduit -mode https                   |
+| -cert | specify an SSL cert file (for https mode)         | eps-conduit -cert mycert.crt              |
+| -key  | specify an SSL keyfile (for https mode)           | eps-conduit -key mykeyfile.key            |
+| -log  | specify a path to store access logs               | eps-conduit -log /var/log/eps-conduit.log |
