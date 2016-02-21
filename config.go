@@ -28,6 +28,9 @@ type Config struct {
 	// Path to private key file related to certificate
 	Keyfile string `toml:keyFile`
 
+	// Path to access logs
+	AccessLog string `toml:accessLog`
+
 	// Revserse Proxies to forward requests to
 	Proxies []*httputil.ReverseProxy
 
@@ -58,21 +61,26 @@ func (c *Config) init(configFile string) {
 	if err != nil {
 		log.Fatal("Config file not found: ", configFile)
 	}
+
 	if _, err := toml.DecodeFile(configFile, c); err != nil {
 		log.Fatal(err)
 	}
+
 	c.handleUserInput()
 	c.printConfigInfo()
 	c.makeProxies()
 	c.HostCount = len(c.Backends)
 	c.NextHost = 0
+
+	if err := c.configureAccessLog(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // handleUserInput checks command line input and overrides config file settings
 // Backends is parsed from a raw string to a slice of strings
 // TODO: Better input validation
 func (c *Config) handleUserInput() {
-
 	if *backendStr != "" {
 		// Remove whitespace from backends
 		*backendStr = strings.Replace(*backendStr, " ", "", -1)
@@ -90,6 +98,9 @@ func (c *Config) handleUserInput() {
 	}
 	if *keyFile != "" {
 		c.Keyfile = *keyFile
+	}
+	if *accessLog != "" {
+		c.AccessLog = *accessLog
 	}
 }
 
@@ -117,6 +128,19 @@ func (c *Config) makeProxies() {
 		}
 		c.Proxies[i] = &httputil.ReverseProxy{Director: director}
 	}
+}
+
+// configureAccessLog checks if the log path exists and if not, sets it up so
+// logging can successfully take place
+func (c *Config) configureAccessLog() error {
+	if _, err := os.Stat(config.AccessLog); os.IsNotExist(err) {
+		file, err := os.OpenFile(config.AccessLog, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			return err
+		}
+		file.Close()
+	}
+	return nil
 }
 
 // Function for handling the http requests

@@ -25,13 +25,14 @@ var bind = flag.String("bind", "", "The port the load balancer should listen to"
 var mode = flag.String("mode", "", "Balancing Mode")
 var certFile = flag.String("cert", "", "Path to rsa private key")
 var keyFile = flag.String("key", "", "Path to rsa public key")
+var accessLog = flag.String("log", "", "Path to store access logs")
 
 func main() {
-
 	flag.Parse()
 	config := GetConfig(*configFile)
+
 	// send requests to proxies via config.handle
-	http.HandleFunc("/", config.handle)
+	http.HandleFunc("/", LoggingMiddleware(config.handle))
 
 	// Start the http(s) listener depending on user's selected mode
 	if config.Mode == "http" {
